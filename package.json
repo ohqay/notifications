@@ -1,5 +1,5 @@
 {
-  "name": "notifications-mcp",
+  "name": "notifications",
   "version": "0.1.0",
   "description": "Native macOS notifications for MCP",
   "type": "module",

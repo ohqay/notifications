@@ -41,43 +41,37 @@ If you prefer to configure manually, add the following to your Claude Desktop co
 
 Restart Claude Desktop after updating the configuration.
 
-## Available Tools
+## Available Tool
 
-### 1. `send_simple_notification`
+### `send_notification`
 
-Send a basic notification with title and message.
-
-**Parameters:**
-- `title` (string, required): The notification title
-- `message` (string, required): The notification message
-- `sound` (boolean, optional): Play the default notification sound (default: true)
-
-**Example:**
-```
-Send a simple notification with title "Hello" and message "World"
-```
-
-### 2. `send_notification`
-
-Send an advanced notification with full customization options.
+Send a macOS notification with customizable options.
 
 **Parameters:**
 - `title` (string, required): The notification title
-- `message` (string, optional): The notification message body
+- `message` (string, required): The notification message body
 - `subtitle` (string, optional): Optional subtitle for the notification
 - `sound` (string, optional): Notification sound. Options:
   - "Basso", "Blow", "Bottle", "Frog", "Funk", "Glass", "Hero", "Morse"
   - "Ping", "Pop", "Purr", "Sosumi", "Submarine", "Tink", "default"
   - "none" for silent notifications
+  - Defaults to "default" (system sound) if not specified
 - `icon` (string, optional): Path to an icon image file (absolute path)
 - `contentImage` (string, optional): Path to an image to display in the notification body
-- `wait` (boolean, optional): Wait for user interaction with the notification
+- `wait` (boolean, optional): Wait for user interaction with the notification (default: false)
 - `timeout` (number, optional): Timeout in seconds (default: 10)
 - `closeLabel` (string, optional): Label for the close button
 - `actions` (array, optional): Action buttons for the notification (max 2)
-- `reply` (boolean, optional): Enable reply functionality
+- `reply` (boolean, optional): Enable reply functionality (default: false)
 
-**Example:**
+**Examples:**
+
+Simple usage:
+```
+Send a notification with title "Hello" and message "World"
+```
+
+Advanced usage:
 ```
 Send a notification with title "Meeting Reminder", message "Team standup in 5 minutes", sound "Ping", and wait for user interaction
 ```
@@ -110,14 +104,14 @@ notifications/
 
 ## Example Usage in Claude
 
-Once configured, you can use the notification tools in Claude Desktop:
+Once configured, you can use the notification tool in Claude Desktop:
 
-### Simple Notifications
+### Basic Usage
 ```
 Please send a notification with title "Reminder" and message "Don't forget to take a break!"
 ```
 
-### Advanced Notifications
+### Custom Sound
 ```
 Send a notification with:
 - Title: "Build Complete"

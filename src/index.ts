@@ -52,7 +52,7 @@ server.setRequestHandler(ListToolsRequestSchema, async () => {
     tools: [
       {
         name: "send_notification",
-        description: "Send a macOS notification with customizable options",
+        description: "Send a macOS notification",
         inputSchema: {
           type: "object",
           properties: {
@@ -70,8 +70,9 @@ server.setRequestHandler(ListToolsRequestSchema, async () => {
             },
             sound: {
               type: "string",
-              description: `Notification sound. Can be: ${MACOS_SOUNDS.join(", ")}, or 'none' for silent`,
+              description: `Notification sound. Can be: ${MACOS_SOUNDS.join(", ")}, 'none' for silent, or omit for default sound`,
               enum: [...MACOS_SOUNDS, "none"],
+              default: "default",
             },
             icon: {
               type: "string",
@@ -109,29 +110,6 @@ server.setRequestHandler(ListToolsRequestSchema, async () => {
               default: false,
             },
           },
-          required: ["title"],
-        },
-      },
-      {
-        name: "send_simple_notification",
-        description: "Send a simple notification with just title and message",
-        inputSchema: {
-          type: "object",
-          properties: {
-            title: {
-              type: "string",
-              description: "The notification title",
-            },
-            message: {
-              type: "string",
-              description: "The notification message",
-            },
-            sound: {
-              type: "boolean",
-              description: "Play the default notification sound",
-              default: true,
-            },
-          },
           required: ["title", "message"],
         },
       },
@@ -139,16 +117,10 @@ server.setRequestHandler(ListToolsRequestSchema, async () => {
   };
 });
 
-// Type definitions for tool arguments
-interface SimpleNotificationArgs {
-  title: string;
-  message: string;
-  sound?: boolean;
-}
-
+// Type definition for tool arguments
 interface NotificationArgs {
   title: string;
-  message?: string;
+  message: string;
   subtitle?: string;
   sound?: string;
   icon?: string;
@@ -169,51 +141,13 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
   }
 
   switch (name) {
-    case "send_simple_notification": {
-      const notifArgs = args as unknown as SimpleNotificationArgs;
-      
-      try {
-        await new Promise<string>((resolve, reject) => {
-          notifier.notify(
-            {
-              title: notifArgs.title,
-              message: notifArgs.message,
-              sound: notifArgs.sound !== false,
-              timeout: 10,
-            },
-            (err, response) => {
-              if (err) {
-                reject(err);
-              } else {
-                resolve(response);
-              }
-            }
-          );
-        });
-
-        return {
-          content: [
-            {
-              type: "text",
-              text: `Notification sent successfully: "${notifArgs.title}"`,
-            },
-          ],
-        };
-      } catch (error) {
-        throw new McpError(
-          ErrorCode.InternalError,
-          `Failed to send notification: ${error}`
-        );
-      }
-    }
-
     case "send_notification": {
       const notifArgs = args as unknown as NotificationArgs;
       
       try {
         const notificationOptions: any = {
           title: notifArgs.title,
-          message: notifArgs.message || "",
+          message: notifArgs.message,
           timeout: notifArgs.timeout || 10,
           wait: notifArgs.wait || false,
         };
@@ -223,10 +157,14 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
           notificationOptions.subtitle = notifArgs.subtitle;
         }
 
-        if (notifArgs.sound && notifArgs.sound !== "none") {
-          notificationOptions.sound = notifArgs.sound === "default" ? true : notifArgs.sound;
-        } else if (notifArgs.sound === "none") {
+        // Handle sound: default to true (system sound) if not specified
+        if (notifArgs.sound === "none") {
           notificationOptions.sound = false;
+        } else if (notifArgs.sound && notifArgs.sound !== "default") {
+          notificationOptions.sound = notifArgs.sound;
+        } else {
+          // Default case: sound is undefined or "default"
+          notificationOptions.sound = true;
         }
 
         if (notifArgs.icon) {
