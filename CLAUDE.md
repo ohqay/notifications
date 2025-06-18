@@ -21,3 +21,8 @@ This is an MCP (Model Context Protocol) server that provides native macOS notifi
 - Full MCP protocol compliance
 - Support for notification sounds, titles, messages, and icons
 - TypeScript for type safety
+
+## GitHub CLI Access
+- You have access to the `gh` CLI tool for GitHub operations
+- Use `gh` for creating repositories, managing issues, pull requests, etc.
+- Repository URL: https://github.com/ohqay/notifications

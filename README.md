@@ -14,7 +14,7 @@ A Model Context Protocol (MCP) server that provides native macOS notification ca
 
 ```bash
 # Clone the repository
-git clone <repository-url>
+git clone https://github.com/ohqay/notifications.git
 cd notifications
 
 # Install dependencies using Bun
