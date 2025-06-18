@@ -1,14 +1,22 @@
 # Notifications MCP Server
 
-A Model Context Protocol (MCP) server that provides native macOS notification capabilities to AI tools like Claude Desktop.
+An MCP server that enables AI assistants like Claude to send native macOS notifications to your computer.
+
+## What it does
+
+This server gives AI assistants the ability to notify you through your Mac's notification system. Once installed, you can ask your AI assistant to send you notifications for various purposes like:
+- Alerting you when a long-running task completes
+- Reminding you of important information
+- Notifying you when the AI needs your attention
+- Sending updates about ongoing processes
 
 ## Features
 
-- Native macOS notifications with full Notification Center integration
-- Support for all macOS notification sounds
-- Customizable notification properties (title, message, icons)
-- Interactive notifications with reply and action button support
-- Wait for user interaction and receive feedback
+- Native macOS notifications that appear in Notification Center
+- Support for all system notification sounds
+- Ability to wait for and detect user interaction with notifications
+- Reply functionality for quick responses
+- Custom action buttons
 
 ## Installation
 
@@ -24,9 +32,12 @@ bun install
 bun run setup-claude
 ```
 
-## Manual Configuration for Claude Desktop
+After installation, restart Claude Desktop to activate the notifications capability.
 
-If you prefer to configure manually, add the following to your Claude Desktop configuration file (`~/Library/Application Support/Claude/claude_desktop_config.json`):
+## Manual Configuration
+
+If you prefer to configure manually, add this to your Claude Desktop configuration file:
+`~/Library/Application Support/Claude/claude_desktop_config.json`
 
 ```json
 {
@@ -39,46 +50,44 @@ If you prefer to configure manually, add the following to your Claude Desktop co
 }
 ```
 
-Restart Claude Desktop after updating the configuration.
+## How to Use
 
-## Available Tool
+Once installed, you can ask Claude to send notifications by including requests like these in your prompts:
 
-### `send_notification`
+### Basic Examples
+- "Let me know when you're done analyzing this data"
+- "Notify me when the task is complete"
+- "Send me a notification in 5 minutes to take a break"
+- "Alert me when you find the answer"
 
-Send a macOS notification with customizable options.
+### Advanced Examples
+- "When you finish processing, send a notification with a 'Glass' sound"
+- "Notify me with a ping sound when the code review is done"
+- "Send a silent notification when the download completes"
 
-**Parameters:**
-- `title` (string, required): The notification title
-- `message` (string, required): The notification message body
-- `sound` (string, optional): Notification sound. Options:
-  - "Basso", "Blow", "Bottle", "Frog", "Funk", "Glass", "Hero", "Morse"
-  - "Ping", "Pop", "Purr", "Sosumi", "Submarine", "Tink", "default"
-  - "none" for silent notifications
-  - Defaults to "default" (system sound) if not specified
-- `icon` (string, optional): Path to an icon image file (absolute path)
-- `contentImage` (string, optional): Path to an image to display in the notification body
-- `wait` (boolean, optional): Wait for user interaction with the notification (default: false)
-- `timeout` (number, optional): Timeout in seconds (default: 10)
-- `closeLabel` (string, optional): Label for the close button
-- `actions` (array, optional): Action buttons for the notification (max 2)
-- `reply` (boolean, optional): Enable reply functionality (default: false)
+### Interactive Examples
+- "Send a notification I can reply to for quick notes"
+- "Alert me with options to continue or stop"
 
-**Examples:**
+## Technical Details
 
-Simple usage:
-```
-Send a notification with title "Hello" and message "World"
-```
+The server exposes a `send_notification` tool to AI assistants with these options:
 
-Advanced usage:
-```
-Send a notification with title "Meeting Reminder", message "Team standup in 5 minutes", sound "Ping", and wait for user interaction
-```
+- **title** (required): The notification title
+- **message** (required): The notification message body
+- **sound**: System notification sound (Basso, Blow, Bottle, Frog, Funk, Glass, Hero, Morse, Ping, Pop, Purr, Sosumi, Submarine, Tink, default, or none)
+- **wait**: Whether to wait for user interaction
+- **timeout**: How long to display the notification (seconds)
+- **reply**: Enable reply functionality
+- **actions**: Action buttons (max 2)
+- **icon**: Path to custom icon
+- **contentImage**: Image to display in notification
+- **closeLabel**: Custom close button label
 
-## macOS Requirements
+## System Requirements
 
 - macOS 10.8 or higher for basic notifications
-- macOS 10.9 or higher for advanced features (icons, content images, reply, actions)
+- macOS 10.9 or higher for advanced features (icons, images, reply, actions)
 
 ## Development
 
@@ -87,6 +96,7 @@ Send a notification with title "Meeting Reminder", message "Team standup in 5 mi
 - `bun run build` - Build the TypeScript project
 - `bun run watch` - Watch for changes and rebuild
 - `bun run dev` - Build and run the server
+- `bun run setup-claude` - Build and auto-configure for Claude Desktop
 
 ### Project Structure
 
@@ -97,42 +107,20 @@ notifications/
 ├── build/              # Compiled JavaScript output
 ├── package.json        # Project configuration
 ├── tsconfig.json       # TypeScript configuration
-├── CLAUDE.md          # Claude-specific instructions
+├── setup-claude.js     # Automatic Claude Desktop configuration
+├── CLAUDE.md          # Instructions for AI assistants
 └── README.md          # This file
-```
-
-## Example Usage in Claude
-
-Once configured, you can use the notification tool in Claude Desktop:
-
-### Basic Usage
-```
-Please send a notification with title "Reminder" and message "Don't forget to take a break!"
-```
-
-### Custom Sound
-```
-Send a notification with:
-- Title: "Build Complete"
-- Message: "Your project has been successfully built"
-- Sound: "Glass"
-- Wait for my click
-```
-
-### Interactive Notifications
-```
-Send a notification that allows me to reply with:
-- Title: "Quick Note"
-- Message: "What's on your mind?"
-- Enable reply
-- Sound: "Pop"
 ```
 
 ## Limitations
 
-- The notification will show a small Terminal icon (this is a macOS limitation)
+- Notifications show a Terminal icon in the corner (macOS limitation when sent from command-line tools)
+- Maximum of 2 action buttons per notification
 - Some features require macOS 10.9 or higher
-- Action buttons are limited to 2 per notification
+
+## Contributing
+
+Feel free to submit issues or pull requests on the [GitHub repository](https://github.com/ohqay/notifications).
 
 ## License
 
