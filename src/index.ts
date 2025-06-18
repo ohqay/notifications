@@ -64,10 +64,6 @@ server.setRequestHandler(ListToolsRequestSchema, async () => {
               type: "string",
               description: "The notification message body",
             },
-            subtitle: {
-              type: "string",
-              description: "Optional subtitle for the notification",
-            },
             sound: {
               type: "string",
               description: `Notification sound. Can be: ${MACOS_SOUNDS.join(", ")}, 'none' for silent, or omit for default sound`,
@@ -121,7 +117,6 @@ server.setRequestHandler(ListToolsRequestSchema, async () => {
 interface NotificationArgs {
   title: string;
   message: string;
-  subtitle?: string;
   sound?: string;
   icon?: string;
   contentImage?: string;
@@ -151,11 +146,6 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
           timeout: notifArgs.timeout || 10,
           wait: notifArgs.wait || false,
         };
-
-        // Add optional properties
-        if (notifArgs.subtitle) {
-          notificationOptions.subtitle = notifArgs.subtitle;
-        }
 
         // Handle sound: default to true (system sound) if not specified
         if (notifArgs.sound === "none") {

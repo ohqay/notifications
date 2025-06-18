@@ -6,7 +6,7 @@ A Model Context Protocol (MCP) server that provides native macOS notification ca
 
 - Native macOS notifications with full Notification Center integration
 - Support for all macOS notification sounds
-- Customizable notification properties (title, message, subtitle, icons)
+- Customizable notification properties (title, message, icons)
 - Interactive notifications with reply and action button support
 - Wait for user interaction and receive feedback
 
@@ -50,7 +50,6 @@ Send a macOS notification with customizable options.
 **Parameters:**
 - `title` (string, required): The notification title
 - `message` (string, required): The notification message body
-- `subtitle` (string, optional): Optional subtitle for the notification
 - `sound` (string, optional): Notification sound. Options:
   - "Basso", "Blow", "Bottle", "Frog", "Funk", "Glass", "Hero", "Morse"
   - "Ping", "Pop", "Purr", "Sosumi", "Submarine", "Tink", "default"
