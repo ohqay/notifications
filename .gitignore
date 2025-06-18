@@ -1,0 +1,92 @@
+node_modules/
+bower_components/
+jspm_packages/
+
+# Build output
+build/
+dist/
+tmp/
+temp/
+.cache/
+coverage/
+lib-cov/
+
+# Log files
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# Environment files
+.env
+.env.*
+!.env.example
+*.local
+*.tsbuildinfo
+
+# Swap and temp files
+*.swp
+*.swo
+*.swn
+*.tmp
+*.temp
+*.old
+
+# OS generated files
+.DS_Store
+Thumbs.db
+ehthumbs.db
+Icon?
+Desktop.ini
+
+# IDEs and editors
+.idea/
+.vscode/
+*.code-workspace
+*.sublime-workspace
+*.sublime-project
+*.tmproj
+*.tmproject
+*.komodoproject
+*.kate-swp
+*.ncb
+*.sdf
+*.suo
+*.ntvs*
+*.vspscc
+*.vssscc
+*.codekit-cache/
+*.c9/
+*.settings/
+*.history/
+*.vscode-test/
+.cursor/
+.zed/
+.ropeproject
+
+# Test output
+junit.xml
+test-results/
+test-output/
+
+# Miscellaneous
+*.pid
+*.seed
+*.pid.lock
+*.tgz
+*.bak
+*.backup
+*.orig
+*.rej
+
+# Dependency directories
+.pnp/
+.pnp.js
+.venv/
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
