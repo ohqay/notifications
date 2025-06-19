@@ -112,6 +112,17 @@ notifications/
 └── README.md          # This file
 ```
 
+## Troubleshooting
+
+### Notifications not appearing?
+
+The server handles notification failures gracefully and will provide helpful instructions if notifications are blocked. Common causes:
+
+1. **Notifications disabled**: Check System Settings > Notifications > Terminal and ensure notifications are allowed
+2. **Focus mode active**: macOS Focus modes can block notifications
+3. **Do Not Disturb enabled**: Turn off Do Not Disturb in Control Center
+4. **First-time permission**: macOS may prompt for permission the first time Terminal tries to send a notification
+
 ## Limitations
 
 - Notifications show a Terminal icon in the corner (macOS limitation when sent from command-line tools)

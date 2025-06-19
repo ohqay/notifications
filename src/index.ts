@@ -181,14 +181,42 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
           type: string;
           response?: string;
           activationValue?: string;
+          error?: string;
         }>((resolve, reject) => {
-          const notification = notifier.notify(notificationOptions, (err, response) => {
-            if (err) {
-              reject(err);
-            } else if (!notifArgs.wait) {
-              resolve({ type: "sent", response });
-            }
-          });
+          try {
+            const notification = notifier.notify(notificationOptions, (err, response) => {
+              if (err) {
+                // Check for common notification failure scenarios
+                if (err.message?.includes("Notification Center")) {
+                  resolve({ 
+                    type: "error", 
+                    error: "Notifications may be disabled in System Settings or blocked by Focus mode" 
+                  });
+                } else {
+                  resolve({ 
+                    type: "error", 
+                    error: err.message || "Failed to send notification" 
+                  });
+                }
+              } else if (!notifArgs.wait) {
+                // Check if response indicates notification was not shown
+                if (response === "Notification not sent") {
+                  resolve({ 
+                    type: "error", 
+                    error: "Notification was not displayed (may be disabled or in Focus mode)" 
+                  });
+                } else {
+                  resolve({ type: "sent", response });
+                }
+              }
+            });
+          } catch (error) {
+            // Handle synchronous errors from notifier
+            resolve({ 
+              type: "error", 
+              error: `Failed to create notification: ${error}` 
+            });
+          }
 
           if (notifArgs.wait) {
             // Set up event listeners for user interaction
@@ -220,6 +248,18 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
           }
         });
 
+        // Handle error cases gracefully
+        if (result.type === "error") {
+          return {
+            content: [
+              {
+                type: "text",
+                text: `⚠️ Could not send notification: ${result.error}\n\nTo enable notifications:\n1. Open System Settings > Notifications\n2. Find "Terminal" in the app list\n3. Allow notifications\n4. Check that Focus mode isn't blocking notifications`,
+              },
+            ],
+          };
+        }
+
         let resultText = `Notification sent successfully: "${notifArgs.title}"`;
         
         if (result.type === "clicked") {
@@ -241,10 +281,15 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
           ],
         };
       } catch (error) {
-        throw new McpError(
-          ErrorCode.InternalError,
-          `Failed to send notification: ${error}`
-        );
+        // Return a helpful message instead of throwing an error
+        return {
+          content: [
+            {
+              type: "text",
+              text: `⚠️ Could not send notification due to an unexpected error: ${error}\n\nThis might happen if:\n- Notifications are disabled in System Settings\n- Focus mode is blocking notifications\n- Terminal doesn't have notification permissions\n\nPlease check System Settings > Notifications > Terminal`,
+            },
+          ],
+        };
       }
     }
 
